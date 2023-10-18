@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import usuario from '../dao/mongo/models/Users.js';
+// import usuario from '../dao/mongo/models/Users.js';
 import { isValidatePassword } from '../../utils.js';
 import productos from '../dao/mongo/models/Product.js';
 import cartModel from '../dao/mongo/models/Carrito.js';
 import bcrypt from 'bcrypt'
+import  { Users } from '../dao/factory.js';
 
 const router = Router();
-const userServices = new usuario()
+const userServices = new Users();
 
 
 router.get("/login", async (req, res) => {
@@ -20,11 +21,13 @@ router.get("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).render("login", { error: "Valores erroneos" });
-
-    const user = await usuario.findOne({ email }, { first_name: 1, last_name: 1, age: 1, password: 1, email: 1 , isAdmin: 1 });
+   console.log (userServices)
+   
+    const user = await userServices.findOne({ email }, { first_name: 1, last_name: 1, age: 1, password: 1, email: 1 , isAdmin: 1 });
+    
         let products= await productos.find()
         req.session.products = products
-        // console.log (products)
+        console.log (products)
 
     if (!user) {
         return res.status(400).render("login", { error: "Usuario no encontrado" });

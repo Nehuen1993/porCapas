@@ -1,12 +1,13 @@
 import usersModel from './models/Users.js'
 
-export default class User {
-    constructor() {
+export default class Users {
+    constructor() {}
 
-    }
-
-    get = async () => {
-        let users = await usersModel.find()
-        return users
+    async findOne(query, projection) {
+        try {
+            return await usersModel.findOne(query, projection);
+        } catch (error) {
+            throw new Error(`Error en la búsqueda del usuario: ${error}`);
+        }
     }
 }
